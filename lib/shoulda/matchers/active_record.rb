@@ -1,4 +1,5 @@
 require 'shoulda/matchers/active_record/association_matcher'
+require 'shoulda/matchers/active_record/association_matchers/order_matcher'
 require 'shoulda/matchers/active_record/have_db_column_matcher'
 require 'shoulda/matchers/active_record/have_db_index_matcher'
 require 'shoulda/matchers/active_record/have_readonly_attribute_matcher'
