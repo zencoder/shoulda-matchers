@@ -32,7 +32,7 @@ module Shoulda # :nodoc:
           end
 
           def model_class
-            @subject.model_class
+            @subject.class
           end
         end
       end

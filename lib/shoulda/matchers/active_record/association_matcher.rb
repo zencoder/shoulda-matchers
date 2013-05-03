@@ -80,7 +80,7 @@ module Shoulda # :nodoc:
         end
 
         def through(through)
-          through_matcher =  Shoulda::Matchers::ActiveRecord::AssociationMatchers::ThroughMatcher.new(through)
+          through_matcher =  Shoulda::Matchers::ActiveRecord::AssociationMatchers::ThroughMatcher.new(through, @name)
           add_submatcher(through_matcher)
           self
         end
