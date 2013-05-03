@@ -109,7 +109,7 @@ module Shoulda # :nodoc:
 
         def failing_submatchers
           @failing_submatchers ||= @submatchers.select do |matcher|
-            !matcher.matches?(@subject)
+            !matcher.matches?(reflection)
           end
         end
 
