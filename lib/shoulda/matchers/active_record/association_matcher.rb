@@ -80,7 +80,8 @@ module Shoulda # :nodoc:
         end
 
         def through(through)
-          @options[:through] = through
+          through_matcher =  Shoulda::Matchers::ActiveRecord::AssociationMatchers::ThroughMatcher.new(through)
+          add_submatcher(through_matcher)
           self
         end
 
@@ -109,7 +110,7 @@ module Shoulda # :nodoc:
 
         def failing_submatchers
           @failing_submatchers ||= @submatchers.select do |matcher|
-            !matcher.matches?(reflection)
+            !matcher.matches?(@subject)
           end
         end
 
@@ -143,7 +144,6 @@ module Shoulda # :nodoc:
           association_exists? &&
             macro_correct? &&
             foreign_key_exists? &&
-            through_association_valid? &&
             dependent_correct? &&
             class_name_correct? &&
             conditions_correct? &&
@@ -167,7 +167,6 @@ module Shoulda # :nodoc:
 
         def description
           description = "#{macro_description} #{@name}"
-          description += " through #{@options[:through]}"          if @options.key?(:through)
           description += " dependent => #{@options[:dependent]}"   if @options.key?(:dependent)
           description += " class_name => #{@options[:class_name]}" if @options.key?(:class_name)
           description += @submatchers.map(&:description)
@@ -206,29 +205,6 @@ module Shoulda # :nodoc:
           [:has_many, :has_one].include?(@macro) &&
             !through? &&
             !class_has_foreign_key?(associated_class)
-        end
-
-        def through_association_valid?
-          @options[:through].nil? || (through_association_exists? && through_association_correct?)
-        end
-
-        def through_association_exists?
-          if through_reflection.nil?
-            @missing = "#{model_class.name} does not have any relationship to #{@options[:through]}"
-            false
-          else
-            true
-          end
-        end
-
-        def through_association_correct?
-          if @options[:through] == reflection.options[:through]
-            true
-          else
-            @missing = "Expected #{model_class.name} to have #{@name} through #{@options[:through]}, " +
-              "but got it through #{reflection.options[:through]}"
-            false
-          end
         end
 
         def dependent_correct?
@@ -355,10 +331,6 @@ module Shoulda # :nodoc:
           else
             reflection
           end
-        end
-
-        def through_reflection
-          @through_reflection ||= model_class.reflect_on_association(@options[:through])
         end
 
         def expectation
