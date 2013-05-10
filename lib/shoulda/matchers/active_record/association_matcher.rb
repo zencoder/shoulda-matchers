@@ -81,19 +81,19 @@ module Shoulda # :nodoc:
         end
 
         def through(through)
-          through_matcher =  Shoulda::Matchers::ActiveRecord::AssociationMatchers::ThroughMatcher.new(through, @name)
+          through_matcher = AssociationMatchers::ThroughMatcher.new(through, @name)
           add_submatcher(through_matcher)
           self
         end
 
         def dependent(dependent)
-          dependent_matcher =  Shoulda::Matchers::ActiveRecord::AssociationMatchers::DependentMatcher.new(dependent, @name)
+          dependent_matcher = AssociationMatchers::DependentMatcher.new(dependent, @name)
           add_submatcher(dependent_matcher)
           self
         end
 
         def order(order)
-          order_matcher = Shoulda::Matchers::ActiveRecord::AssociationMatchers::OrderMatcher.new(order, @name)
+          order_matcher = AssociationMatchers::OrderMatcher.new(order, @name)
           add_submatcher(order_matcher)
           self
         end
