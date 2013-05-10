@@ -17,7 +17,11 @@ module Shoulda # :nodoc:
 
           def matches?(subject)
             self.subject = ModelReflector.new(subject, name)
-            through.nil? || (through_association_exists? && through_association_correct?)
+            through.nil? || association_set_properly?
+          end
+
+          def association_set_properly?
+            through_association_exists? && through_association_correct?
           end
 
           def through_association_exists?
@@ -30,14 +34,15 @@ module Shoulda # :nodoc:
           end
 
           def through_reflection
-            through_reflection ||= subject.reflect_on_association(through)
+            @through_reflection ||= subject.reflect_on_association(through)
           end
 
           def through_association_correct?
             if subject.option_set_properly?(through, :through)
               true
             else
-              self.missing_option = "Expected #{name} to have #{name} through #{through}, " +
+              self.missing_option =
+                "Expected #{name} to have #{name} through #{through}, " +
                 "but got it through #{subject.option_string(:through)}"
               false
             end
