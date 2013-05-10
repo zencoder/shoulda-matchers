@@ -3,6 +3,8 @@ module Shoulda # :nodoc:
     module ActiveRecord # :nodoc:
       module AssociationMatchers
         class OrderMatcher
+          attr_accessor :missing_option
+
           def initialize(order, name)
             @order = order
             @name = name
@@ -10,25 +12,22 @@ module Shoulda # :nodoc:
           end
 
           def description
-            " order => #{@order}"
+            " order => #{order}"
           end
 
           def matches?(subject)
-            @subject = ModelReflector.new(subject, @name)
-            if @order.to_s == @subject.reflection.options[:order].to_s
+            subject = ModelReflector.new(subject, name)
+
+            if order.to_s == subject.reflection.options[:order].to_s
               true
             else
-              @missing_option = "#{@name} should be ordered by #{@order}"
+              self.missing_option = "#{name} should be ordered by #{order}"
               false
             end
           end
 
-          #repeated exactly
-          def missing_option
-            @missing_option
-          end
-
-          #repeated exactly
+          private
+          attr_accessor :order, :name
         end
       end
     end
