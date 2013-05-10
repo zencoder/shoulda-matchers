@@ -18,7 +18,7 @@ module Shoulda # :nodoc:
           def matches?(subject)
             subject = ModelReflector.new(subject, name)
 
-            if dependent.nil? || dependent.to_s == subject.option_string(:dependent)
+            if dependent.nil? || subject.option_set_properly?(dependent, :dependent)
               true
             else
               self.missing_option = "#{name} should have #{dependent} dependency"

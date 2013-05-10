@@ -9,21 +9,27 @@ module Shoulda # :nodoc:
           end
 
           def reflection
-            @reflection ||= reflect_on_association(@name)
+            @reflection ||= reflect_on_association(name)
           end
 
           def reflect_on_association(name)
             model_class.reflect_on_association(name)
           end
 
-          #repeated exactly
           def model_class
-            @subject.class
+            subject.class
           end
 
           def option_string(key)
             reflection.options[key].to_s
           end
+
+          def option_set_properly?(option, option_key)
+            option.to_s == option_string(option_key)
+          end
+
+          private
+          attr_reader :subject, :name
         end
       end
     end

@@ -34,7 +34,7 @@ module Shoulda # :nodoc:
           end
 
           def through_association_correct?
-            if through.to_s == subject.option_string(:through)
+            if subject.option_set_properly?(through, :through)
               true
             else
               self.missing_option = "Expected #{name} to have #{name} through #{through}, " +
