@@ -3,6 +3,8 @@ module Shoulda # :nodoc:
     module ActiveRecord # :nodoc:
       module AssociationMatchers
         class DependentMatcher
+          attr_accessor :missing_option
+
           def initialize(dependent, name)
             @dependent = dependent
             @name = name
@@ -10,22 +12,22 @@ module Shoulda # :nodoc:
           end
 
           def description
-            " dependent => #{@dependent}"
-          end
-
-          def missing_option
-            @missing
+            " dependent => #{dependent}"
           end
 
           def matches?(subject)
-            @subject = ModelReflector.new(subject, @name)
-            if @dependent.nil? || @dependent.to_s == @subject.reflection.options[:dependent].to_s
+            subject = ModelReflector.new(subject, name)
+
+            if dependent.nil? || dependent.to_s == subject.option_string(:dependent)
               true
             else
-              @missing = "#{@name} should have #{@dependent} dependency"
+              self.missing_option = "#{name} should have #{dependent} dependency"
               false
             end
           end
+
+          private
+          attr_accessor :dependent, :name
         end
       end
     end
