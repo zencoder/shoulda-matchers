@@ -87,7 +87,8 @@ module Shoulda # :nodoc:
         end
 
         def dependent(dependent)
-          @options[:dependent] = dependent
+          dependent_matcher =  Shoulda::Matchers::ActiveRecord::AssociationMatchers::DependentMatcher.new(dependent, @name)
+          add_submatcher(dependent_matcher)
           self
         end
 
@@ -145,7 +146,6 @@ module Shoulda # :nodoc:
           association_exists? &&
             macro_correct? &&
             foreign_key_exists? &&
-            dependent_correct? &&
             class_name_correct? &&
             conditions_correct? &&
             join_table_exists? &&
@@ -168,7 +168,6 @@ module Shoulda # :nodoc:
 
         def description
           description = "#{macro_description} #{@name}"
-          description += " dependent => #{@options[:dependent]}"   if @options.key?(:dependent)
           description += " class_name => #{@options[:class_name]}" if @options.key?(:class_name)
           description += @submatchers.map(&:description)
           description
@@ -206,15 +205,6 @@ module Shoulda # :nodoc:
           [:has_many, :has_one].include?(@macro) &&
             !through? &&
             !class_has_foreign_key?(associated_class)
-        end
-
-        def dependent_correct?
-          if @options[:dependent].nil? || @options[:dependent].to_s == reflection.options[:dependent].to_s
-            true
-          else
-            @missing = "#{@name} should have #{@options[:dependent]} dependency"
-            false
-          end
         end
 
         def class_name_correct?
