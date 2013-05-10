@@ -22,7 +22,7 @@ module Shoulda # :nodoc:
 
           def through_association_exists?
             if through_reflection.nil?
-              missing_option = "#{name} does not have any relationship to #{through}"
+              self.missing_option = "#{name} does not have any relationship to #{through}"
               false
             else
               true
