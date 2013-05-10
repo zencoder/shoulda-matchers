@@ -20,6 +20,10 @@ module Shoulda # :nodoc:
           def model_class
             @subject.class
           end
+
+          def option_string(key)
+            reflection.options[key].to_s
+          end
         end
       end
     end

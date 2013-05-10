@@ -18,7 +18,7 @@ module Shoulda # :nodoc:
           def matches?(subject)
             subject = ModelReflector.new(subject, name)
 
-            if order.to_s == subject.reflection.options[:order].to_s
+            if order.to_s == subject.option_string(:order)
               true
             else
               self.missing_option = "#{name} should be ordered by #{order}"
