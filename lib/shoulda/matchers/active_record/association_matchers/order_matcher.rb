@@ -14,8 +14,8 @@ module Shoulda # :nodoc:
           end
 
           def matches?(subject)
-            @subject = subject
-            if @order.to_s == reflection.options[:order].to_s
+            @subject = ModelReflector.new(subject, @name)
+            if @order.to_s == @subject.reflection.options[:order].to_s
               true
             else
               @missing_option = "#{@name} should be ordered by #{@order}"
@@ -23,17 +23,12 @@ module Shoulda # :nodoc:
             end
           end
 
+          #repeated exactly
           def missing_option
             @missing_option
           end
 
-          def reflection
-            @reflection ||= model_class.reflect_on_association(@name)
-          end
-
-          def model_class
-            @subject.class
-          end
+          #repeated exactly
         end
       end
     end

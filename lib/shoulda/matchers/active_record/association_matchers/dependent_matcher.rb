@@ -18,21 +18,13 @@ module Shoulda # :nodoc:
           end
 
           def matches?(subject)
-            @subject = subject
-            if @dependent.nil? || @dependent.to_s == reflection.options[:dependent].to_s
+            @subject = ModelReflector.new(subject, @name)
+            if @dependent.nil? || @dependent.to_s == @subject.reflection.options[:dependent].to_s
               true
             else
               @missing = "#{@name} should have #{@dependent} dependency"
               false
             end
-          end
-
-          def reflection
-            @reflection ||= model_class.reflect_on_association(@name)
-          end
-
-          def model_class
-            @subject.class
           end
         end
       end

@@ -14,7 +14,7 @@ module Shoulda # :nodoc:
           end
 
           def matches?(subject)
-            @subject = subject
+            @subject = ModelReflector.new(subject, @name)
             @through.nil? || (through_association_exists? && through_association_correct?)
           end
 
@@ -22,13 +22,9 @@ module Shoulda # :nodoc:
             @missing_option
           end
 
-          def model_class
-            @subject.class
-          end
-
           def through_association_exists?
             if through_reflection.nil?
-              @missing_option = "#{model_class.name} does not have any relationship to #{@through}"
+              @missing_option = "#{@subject.model_class.name} does not have any relationship to #{@through}"
               false
             else
               true
@@ -36,21 +32,17 @@ module Shoulda # :nodoc:
           end
 
           def through_reflection
-            @through_reflection ||= model_class.reflect_on_association(@through)
+            @through_reflection ||= @subject.reflect_on_association(@through)
           end
 
           def through_association_correct?
-            if @through == reflection.options[:through]
+            if @through == @subject.reflection.options[:through]
               true
             else
-              @missing_option = "Expected #{model_class.name} to have #{@name} through #{@through}, " +
-                "but got it through #{reflection.options[:through]}"
+              @missing_option = "Expected #{@subject.model_class.name} to have #{@name} through #{@through}, " +
+                "but got it through #{@subject.reflection.options[:through]}"
               false
             end
-          end
-
-          def reflection
-            @reflection ||= model_class.reflect_on_association(@name)
           end
         end
       end
