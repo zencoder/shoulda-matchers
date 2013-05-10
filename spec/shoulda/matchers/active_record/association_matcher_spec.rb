@@ -256,7 +256,11 @@ describe Shoulda::Matchers::ActiveRecord::AssociationMatcher do
     end
 
     it 'rejects an association with a bad :dependent option' do
-      having_many_children.should_not have_many(:children).dependent(:destroy)
+      matcher = have_many(:children).dependent(:destroy)
+
+      having_many_children.should_not matcher
+
+      matcher.failure_message_for_should.should =~ /children should have destroy dependency/
     end
 
     it 'accepts an association with a valid :order option' do
@@ -401,7 +405,11 @@ describe Shoulda::Matchers::ActiveRecord::AssociationMatcher do
     end
 
     it 'rejects an association with a bad :dependent option' do
-      having_one_detail.should_not have_one(:detail).dependent(:destroy)
+      matcher = have_one(:detail).dependent(:destroy)
+
+      having_one_detail.should_not matcher
+
+      matcher.failure_message_for_should.should =~ /detail should have destroy dependency/
     end
 
     it 'accepts an association with a valid :order option' do
