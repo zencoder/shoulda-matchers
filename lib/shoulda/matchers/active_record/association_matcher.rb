@@ -77,6 +77,7 @@ module Shoulda # :nodoc:
           @name = name
           @options = {}
           @submatchers = []
+          @missing = ''
         end
 
         def through(through)
@@ -154,11 +155,11 @@ module Shoulda # :nodoc:
         end
 
         def failure_message_for_should
-          "Expected #{expectation} (#{@missing})"
+          "Expected #{expectation} (#{missing})"
         end
 
         def missing
-          [@missing + failing_submatchers.map(&:missing_option)].compact.join
+          [[@missing] + failing_submatchers.map(&:missing_option)].compact.join
         end
 
         def failure_message_for_should_not
