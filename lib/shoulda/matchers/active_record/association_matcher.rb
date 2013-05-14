@@ -231,10 +231,10 @@ module Shoulda # :nodoc:
 
         def order_correct?
           if @options.key?(:order)
-            if @options[:order].to_s == reflection.options[:order].to_s
+            if @options[:order].to_s == association_order.to_s
               true
             else
-              @missing = "#{@name} should be ordered by #{@options[:order]}"
+              @missing = "#{@name} should be ordered by #{association_order}"
               false
             end
           else
@@ -242,17 +242,25 @@ module Shoulda # :nodoc:
           end
         end
 
+        def association_order
+          Shoulda::Matchers::RailsShim.association_order(reflection)
+        end
+
         def conditions_correct?
           if @options.key?(:conditions)
-            if @options[:conditions].to_s == reflection.options[:conditions].to_s
+            if @options[:conditions].to_s == association_conditions.to_s
               true
             else
-              @missing = "#{@name} should have the following conditions: #{@options[:conditions]}"
+              @missing = "#{@name} should have the following conditions: #{association_conditions}"
               false
             end
           else
             true
           end
+        end
+
+        def association_conditions
+          Shoulda::Matchers::RailsShim.association_conditions(reflection)
         end
 
         def join_table_exists?
